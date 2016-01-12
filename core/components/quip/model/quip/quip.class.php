@@ -129,8 +129,13 @@ class Quip {
             $this->modx->setLogTarget('HTML');
             $this->modx->setLogLevel(modX::LOG_LEVEL_ERROR);
 
-            $debugUser = $this->config['debugUser'] == '' ? $this->modx->user->get('username') : 'anonymous';
-            $user = $this->modx->getObject('modUser',array('username' => $debugUser));
+            $user = null;
+            $debugUser = 'anonymous';
+            if (isset($this->config['debugUser']) && !empty($this->config['debugUser'])) {
+                $debugUser = $this->modx->user->get('username');
+                $user = $this->modx->getObject('modUser',array('username' => $debugUser));
+            }
+            
             if ($user == null) {
                 $this->modx->user->set('id',$this->modx->getOption('debugUserId',$this->config,1));
                 $this->modx->user->set('username',$debugUser);
